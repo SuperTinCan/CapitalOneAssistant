@@ -1,0 +1,6 @@
+user_id,name,account_type,opened_at,account_balance,avg_monthly_spend,std_monthly_spend,card_status,reported_priority,true_risk_flag,chargeback_history,last_login_ip_country,device_fingerprint
+user_001,James Wilson,checking,2020-12-18,1595.38,1124.02,311.96,Active,MEDIUM,0,1,GB,dev_PUC
+user_002,Megan Morales,savings,2021-01-18,9703.92,1412.71,894.29,Active,HIGH,0,2,CA,dev_wFh
+user_003,Peggy Cox,savings,2020-03-31,9543.21,659.73,357.16,Active,HIGH,0,0,GB,dev_oAE
+user_004,Erin Williamson,savings,2024-06-04,184.84,1321.26,906.7,Active,MEDIUM,0,1,US,dev_yYh
+user_005,Brandon Wilkins,checking,2021-11-17,7288.16,804.4,233.41,Active,LOW,0,0,CA,dev_ltJ
