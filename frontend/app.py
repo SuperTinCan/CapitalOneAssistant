@@ -11,7 +11,7 @@ import time
 
 # ---- Config ----
 API_URL = "http://127.0.0.1:8000/analyze"
-st.set_page_config(page_title="PriorityAI - Customer Service Routing", page_icon="💬", layout="wide")
+st.set_page_config(page_title="NovaRoute - Customer Service Routing", page_icon="💬", layout="wide")
 
 # ---- Load mock user metadata & transactions from disk ----
 DATA_DIR = "data"
@@ -152,7 +152,7 @@ left, right = st.columns([2, 3])
 # ---- Left column: Chat UI ----
 with left:
     user = accounts[user_id]
-    st.title("💬 PriorityAI - Smart Customer Support")
+    st.title("💬 NovaRoute - Smart Customer Support")
     st.caption(f"Chatting as **{user.get('name','Unknown')}**  •  Balance: **{user.get('account_balance','N/A')}**  •  Card: **{user.get('card_status','N/A')}**")
     user_message = st.text_input("Enter your message:")
     if st.button("Send"):
@@ -166,6 +166,7 @@ with left:
                         "user": user_message,
                         "priority": data["priority"],
                         "response": data["response"],
+                        "info": data["info"],
                         "confidence": data["confidence"],
                     }
                 )
@@ -182,6 +183,7 @@ with left:
             st.markdown(f"**You:** {msg['user']}")
             st.markdown(f"**Priority:** {msg['priority']} ({msg['confidence']*100:.0f}% confidence)")
             st.markdown(f"**Assistant:** {msg['response']}")
+            st.markdown(f"**Info:** {msg['info']}")
             st.markdown(f"*{msg.get('ts','') }*")
             st.markdown("---")
     else:
@@ -200,7 +202,7 @@ with right:  # assuming 'right' is your account column variable
             try:
                 injected_df = inject_high_fraud_into_scores(user_id, n=int(inj_n), also_add_txns=bool(also_txns))
                 st.success(f"Injected {len(injected_df)} high-fraud entries for {user_id}.")
-                st.dataframe(injected_df, use_container_width=True, height=200)
+                st.dataframe(injected_df, width="stretch", height=200)
                 # optional: reload local dataframes in the app (so UI shows new txns immediately)
                 # reload global txns_df and accounts if you maintain them as globals
                 txns_df = load_txns()  # if you have this loader function in your file

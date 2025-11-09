@@ -4,6 +4,9 @@ import os
 from dotenv import load_dotenv
 import json, re
 
+from scripts.get_recent_transactions import get_recent_transactions_with_scores
+
+
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
@@ -61,12 +64,18 @@ def analyze_message_with_gemini(message: str, user_id: str) -> dict:
     risk_info = get_user_risk_summary(user_id)
     print(get_fraud_transactions_for_user(user_id))
 
+    df = get_recent_transactions_with_scores(user_id, n=10)
+    json_str = df.to_json(orient="records", indent=2)
+
     prompt = f"""
     You are a Capital One customer service assistant.
     Below is the user's fraud analysis summary and message.
 
     FRAUD CONTEXT:
     {risk_info}
+
+    RECENT TRANSACTIONS WITH FRAUD SCORES:
+    {json_str}
 
     USER MESSAGE:
     "{message}"
@@ -82,6 +91,7 @@ def analyze_message_with_gemini(message: str, user_id: str) -> dict:
     {{
       "priority": "HIGH|MEDIUM|LOW",
       "response": "short helpful message to the user",
+      "info": "information about the client that will help the support agent",
       "confidence": 0.9
     }}
     """
@@ -95,7 +105,7 @@ def analyze_message_with_gemini(message: str, user_id: str) -> dict:
     except Exception as e:
         print("Gemini error:", e)
 
-    return {"priority": "LOW", "response": "Default response.", "confidence": 0.7}
+    return {"priority": "LOW", "response": "Default response.", "info": "Default response.", "confidence": 0.7}
 
 # def analyze_message_with_gemini(message: str) -> dict:
 #     """Use Gemini to classify priority and generate a response."""
